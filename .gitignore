@@ -1,0 +1,49 @@
+# Ignore Gradle build directory
+build/
+
+# Ignore IntelliJ IDEA files
+.idea/
+
+# Ignore Eclipse files
+.settings/
+
+# Ignore project-specific files
+*.iml
+
+# Ignore generated files
+out/
+target/
+
+# Ignore system-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore compiled Java classes
+*.class
+
+# Ignore Gradle wrapper properties
+gradle-wrapper.properties
+gradle-wrapper.jar
+
+# Ignore local Gradle cache
+.gradle/
+
+# Ignore macOS metadata
+.metadata/
+
+# Ignore log files
+*.log
+
+# Ignore temporary files
+*.tmp
+
+# Ignore Javadocs
+javadocs/
+
+# Ignore IDE-specific files
+.vscode/
+
+# Ignore miscellaneous files
+*.bak
+*.swp
+*.swo
