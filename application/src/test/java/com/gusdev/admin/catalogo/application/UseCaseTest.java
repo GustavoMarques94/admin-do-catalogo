@@ -1,6 +1,6 @@
 package com.gusdev.admin.catalogo.application;
 
-import com.gusdev.admin.catalogo.domain.Category;
+import com.gusdev.admin.catalogo.domain.category.Category;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
