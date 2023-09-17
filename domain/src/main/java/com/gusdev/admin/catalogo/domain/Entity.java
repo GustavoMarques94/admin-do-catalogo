@@ -1,5 +1,7 @@
 package com.gusdev.admin.catalogo.domain;
 
+import com.gusdev.admin.catalogo.domain.validation.ValidationHandler;
+
 import java.util.Objects;
 
 //Essa classe Entity serve como uma estrutura básica para entidades no sistema, ela tem um campo 'id'
@@ -21,6 +23,9 @@ public abstract class Entity<ID extends Identifier> {
         Objects.requireNonNull(id, "'id' should not be null");
         this.id = id;
     }
+
+    //Todos que extendam Entity terão que implementar esse método
+    public abstract void validate(ValidationHandler handler);
 
     public ID getId() {
         return id;
