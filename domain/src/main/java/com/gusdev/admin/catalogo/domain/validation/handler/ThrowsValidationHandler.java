@@ -6,11 +6,14 @@ import com.gusdev.admin.catalogo.domain.validation.ValidationHandler;
 
 import java.util.List;
 
+//Implementação da interface 'ValidationHandler'
 public class ThrowsValidationHandler implements ValidationHandler {
 
+    //Adiciona um erro representado pelo objeto 'Error' ao 'ValidationHandler'
+    //Lança uma exceção 'DomainException' que encapsula o erro
     @Override
     public ValidationHandler append(final Error anError) {
-        throw DomainException.with(List.of(anError));
+        throw DomainException.with(anError);
     }
 
     @Override
@@ -23,7 +26,7 @@ public class ThrowsValidationHandler implements ValidationHandler {
         try {
             aValidation.validate();
         } catch (final Exception ex){
-            throw DomainException.with(List.of(new Error(ex.getMessage())));
+            throw DomainException.with(new Error(ex.getMessage()));
         }
 
         return this;

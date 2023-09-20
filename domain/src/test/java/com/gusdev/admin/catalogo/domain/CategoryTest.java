@@ -20,8 +20,6 @@ public class CategoryTest {
         final var actualCategory =
                 Category.newCategory(expectedName, expectedDescription, expectedIsActive);
 
-
-
         final var actualException =
                 //O método assertThrows verifica se uma exceção do tipo 'DomainException' é lançada quando
                 //'actualCategory.validate()' é chamado. Isso verifica se a validação correta foi implementada.
