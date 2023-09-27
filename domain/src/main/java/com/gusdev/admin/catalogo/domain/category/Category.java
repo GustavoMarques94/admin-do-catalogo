@@ -4,6 +4,7 @@ import com.gusdev.admin.catalogo.domain.AggregateRoot;
 import com.gusdev.admin.catalogo.domain.validation.ValidationHandler;
 
 import java.time.Instant;
+import java.util.Objects;
 import java.util.UUID;
 
 //A classe Category está estendendo (herdando) a classe genérica AggregateRoot e especificando que o tipo genérico
@@ -42,6 +43,26 @@ public class Category extends AggregateRoot<CategoryID> {
         new CategoryValidator(this, handler).validate();
     }
 
+    public Category deactivate() {
+        //Se já tiver um valor, de repente estou desativando uma categoria já desativada, não faz sentido mudar essa data.
+        if(Objects.isNull(getDeletedAt())){
+            this.deletedAt = Instant.now();
+        }
+
+        this.active = false;
+        this.updatedAt = Instant.now();
+
+        return this;
+    }
+
+    public Category activate() {
+        this.deletedAt = null;
+        this.active = true;
+        this.updatedAt = Instant.now();
+
+        return this;
+    }
+
     public CategoryID getId() {
         return id;
     }
@@ -69,4 +90,5 @@ public class Category extends AggregateRoot<CategoryID> {
     public Instant getDeletedAt() {
         return deletedAt;
     }
+
 }
