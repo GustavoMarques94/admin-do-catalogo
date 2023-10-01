@@ -2,6 +2,7 @@ package com.gusdev.admin.catalogo.application.category.create;
 
 import com.gusdev.admin.catalogo.domain.category.Category;
 import com.gusdev.admin.catalogo.domain.category.CategoryGateway;
+import com.gusdev.admin.catalogo.domain.validation.handler.Notification;
 import com.gusdev.admin.catalogo.domain.validation.handler.ThrowsValidationHandler;
 
 import java.util.Objects;
@@ -23,10 +24,15 @@ public class DefaultCreateCategoryUseCase extends CreateCategoryUseCase{
         final var aDescription = aCommand.description();
         final var isActive = aCommand.isActive();
 
+        final var notification = Notification.create();
+
         final var aCategory = Category.newCategory(aName, aDescription, isActive);
         //Valida a categoria, e se houver problemas de validação, uma exceção é lançada
-        aCategory.validate(new ThrowsValidationHandler());
+        aCategory.validate(notification);
 
+        if(notification.hasError()){
+            //
+        }
         //Crio uma nova categoria no 'categoryGateway' para criar a categoria no sistema
         //O resultado é passado para criar um objeto 'CreateCategoryOutput' que é então retornado pelo método
         return CreateCategoryOutput.from(this.categoryGateway.create(aCategory));
