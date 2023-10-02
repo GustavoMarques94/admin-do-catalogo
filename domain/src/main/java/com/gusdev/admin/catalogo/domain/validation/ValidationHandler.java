@@ -30,6 +30,14 @@ public interface ValidationHandler {
         return !Objects.isNull(getErrors()) && !getErrors().isEmpty();
     }
 
+    default Error firstError(){
+        if(!Objects.isNull(getErrors()) && !getErrors().isEmpty()){
+            return getErrors().get(0);
+        }else{
+            return null;
+        }
+    }
+
     //INTERFACE ANINHADA chamada 'Validation' dentro da interace 'ValidationHandler'
     //Ela encapsula comportamentos específicos de validação
     //Permite que você passe validações personalizadas para o 'ValidationHandler'

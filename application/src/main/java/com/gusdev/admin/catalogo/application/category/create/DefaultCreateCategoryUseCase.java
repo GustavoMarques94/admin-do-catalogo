@@ -4,6 +4,8 @@ import com.gusdev.admin.catalogo.domain.category.Category;
 import com.gusdev.admin.catalogo.domain.category.CategoryGateway;
 import com.gusdev.admin.catalogo.domain.validation.handler.Notification;
 import com.gusdev.admin.catalogo.domain.validation.handler.ThrowsValidationHandler;
+import io.vavr.API;
+import io.vavr.control.Either;
 
 import java.util.Objects;
 
@@ -18,8 +20,9 @@ public class DefaultCreateCategoryUseCase extends CreateCategoryUseCase{
         this.categoryGateway = Objects.requireNonNull(categoryGateway);
     }
 
+    //Either --> do inglês, ou isso ou aquilo, Notification -> Erro   CreateCategoryOutput --> Tudo correto
     @Override
-    public CreateCategoryOutput execute(final CreateCategoryCommand aCommand) {
+    public Either<Notification, CreateCategoryOutput> execute(final CreateCategoryCommand aCommand) {
         final var aName = aCommand.name();
         final var aDescription = aCommand.description();
         final var isActive = aCommand.isActive();
@@ -30,11 +33,19 @@ public class DefaultCreateCategoryUseCase extends CreateCategoryUseCase{
         //Valida a categoria, e se houver problemas de validação, uma exceção é lançada
         aCategory.validate(notification);
 
-        if(notification.hasError()){
-            //
-        }
+
         //Crio uma nova categoria no 'categoryGateway' para criar a categoria no sistema
         //O resultado é passado para criar um objeto 'CreateCategoryOutput' que é então retornado pelo método
-        return CreateCategoryOutput.from(this.categoryGateway.create(aCategory));
+        /*return CreateCategoryOutput.from(this.categoryGateway.create(aCategory));*/
+        return notification.hasError() ? API.Left(notification) : create(aCategory);
     }
+
+    private Either<Notification, CreateCategoryOutput> create(Category aCategory) {
+        return API.Try(() -> this.categoryGateway.create(aCategory)) //Try do vavr, mais expressivo
+                .toEither() //converto o try em um either
+                .bimap(Notification::create, CreateCategoryOutput::from); //converto o Throwable em um notification e
+                    // converter um Category em um CreateCategoryOutput
+    }
+
+
 }

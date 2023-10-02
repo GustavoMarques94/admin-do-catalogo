@@ -55,7 +55,7 @@ public class CreateCategoryUseCaseTest {
 
         //Método execute do caso de uso é chamado com o comando de criação de categoria
         //Retorna um identificador (objeto 'CategoryID') de categoria válido
-        final var actualOutput = useCase.execute(aCommand);
+        final var actualOutput = useCase.execute(aCommand).get();
 
         //1°Assert
         Assertions.assertNotNull(actualOutput);
@@ -90,12 +90,14 @@ public class CreateCategoryUseCaseTest {
 
         final var aCommand = CreateCategoryCommand.with(expectedName, expectedDescription, expectedIsActive);
 
+        final var notification = useCase.execute(aCommand).getLeft();
         //'execute' do caso de uso é chamado com o comando de criação de categoria que tem o nome nulo
         //'assertThrows' verifica se uma exceção do tipo 'DomainException' é lançada durante a execução do caso de uso
-        final var actualException =
-                Assertions.assertThrows(DomainException.class, () -> useCase.execute(aCommand));
+        /*final var actualException =
+                Assertions.assertThrows(DomainException.class, () -> useCase.execute(aCommand));*/
 
-        Assertions.assertEquals(expectedErrorMessage, actualException.getMessage());
+        Assertions.assertEquals(expectedErrorCount, notification.getErrors().size());
+        Assertions.assertEquals(expectedErrorMessage, notification.firstError().message());
 
         //Assert --> quero ter certeza que o 'create' NÃO irá ser chamado 'times(0)', utilizo o any
         //Garante que o categoryGateway não foi chamado quando um nome de categoria inválido foi fornecido
@@ -116,7 +118,7 @@ public class CreateCategoryUseCaseTest {
         Mockito.when(categoryGateway.create(any()))
                 .thenAnswer(returnsFirstArg());
 
-        final var actualOutput = useCase.execute(aCommand);
+        final var actualOutput = useCase.execute(aCommand).get();
 
         //1°Assert
         Assertions.assertNotNull(actualOutput);
@@ -144,6 +146,7 @@ public class CreateCategoryUseCaseTest {
         final var expectedDescription = "A melhor categoria de filmes";
         final var expectedIsActive = true;
         final var expectedErrorMessage = "Gateway Error";
+        final var expectedErrorCount = 1;
 
         final var aCommand =
                 CreateCategoryCommand.with(expectedName, expectedDescription, expectedIsActive);
@@ -154,10 +157,10 @@ public class CreateCategoryUseCaseTest {
         Mockito.when(categoryGateway.create(any()))
                 .thenThrow(new IllegalStateException("Gateway Error"));
 
-        final var actualException =
-                Assertions.assertThrows(IllegalStateException.class, () -> useCase.execute(aCommand));
+        final var notification = useCase.execute(aCommand).getLeft();
 
-        Assertions.assertEquals(expectedErrorMessage, actualException.getMessage());
+        Assertions.assertEquals(expectedErrorCount, notification.getErrors().size());
+        Assertions.assertEquals(expectedErrorMessage, notification.firstError().message());
 
         Mockito.verify(categoryGateway, Mockito.times(1))
                 .create(Mockito.argThat(aCategory -> {
