@@ -5,13 +5,14 @@ import com.gusdev.admin.catalogo.domain.validation.ValidationHandler;
 
 import java.time.Instant;
 import java.util.Objects;
-import java.util.UUID;
 
 //A classe Category está estendendo (herdando) a classe genérica AggregateRoot e especificando que o tipo genérico
     //associado a essa herança é CategoryID.  Isso implica que a classe Category herda comportamentos e
     //propriedades da classe AggregateRoot, e está sendo parametrizada pelo tipo CategoryID.
 //<CategoryID> é o identificador único para a categoria.
-public class Category extends AggregateRoot<CategoryID> {
+//Cloeable -> é um comportamento da JVM de pegar os atributos desse objeto, criar um novo objeto e copiar os
+    //atribudos para esse novo objeto, em vez de copiar apenas a referência
+public class Category extends AggregateRoot<CategoryID> implements Cloneable {
 
     private String name;
     private String description;
@@ -36,6 +37,18 @@ public class Category extends AggregateRoot<CategoryID> {
         final var now = Instant.now();
         final var deletedAt = isActive ? null : now;
         return new Category(id, aName, aDescription, isActive, now, now, deletedAt);
+    }
+
+    public static Category with(final Category aCategory){
+        return new Category(
+                aCategory.getId(),
+                aCategory.name,
+                aCategory.description,
+                aCategory.isActive(),
+                aCategory.createdAt,
+                aCategory.updatedAt,
+                aCategory.deletedAt
+        );
     }
 
     @Override
@@ -103,6 +116,15 @@ public class Category extends AggregateRoot<CategoryID> {
 
     public Instant getDeletedAt() {
         return deletedAt;
+    }
+
+    @Override
+    public Category clone(){
+        try{
+            return (Category) super.clone();
+        }catch (CloneNotSupportedException e){
+            throw new AssertionError();
+        }
     }
 
 }

@@ -234,7 +234,7 @@ public class CategoryTest {
     }
 
     @Test
-    public void givenValidCategory_whenCallUpdateToInactive_thenReturnCategoryUpdate(){
+    public void givenAValidCategory_whenCallUpdateToInactive_thenReturnCategoryUpdate(){
         final var expectedName = "Filmes";
         final var expectedDescription = "A categoria mais assistida";
         final var expectedIsActive = false;

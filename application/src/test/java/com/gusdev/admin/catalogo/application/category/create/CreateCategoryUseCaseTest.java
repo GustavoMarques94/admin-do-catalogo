@@ -3,6 +3,7 @@ package com.gusdev.admin.catalogo.application.category.create;
 import com.gusdev.admin.catalogo.domain.category.CategoryGateway;
 import com.gusdev.admin.catalogo.domain.exceptions.DomainException;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -32,6 +33,12 @@ public class CreateCategoryUseCaseTest {
     //Essa notação cria um mock (objeto simulado) de 'CategoryGateway'
     @Mock
     private CategoryGateway categoryGateway;
+
+    @BeforeEach //Antes de cada --> Toda vez, antes de cada teste, o Junit vai executar esse método, ele irá fazer um reset nos mocks que temos na classe
+        //Isso garante que nenhum comportamento indesejado esteja sendo passado de um teste para outro
+    void cleanUp(){
+        Mockito.reset(categoryGateway); //passo as classes que tiverem o comportamento mockado,
+    }
 
     //1. Teste do caminho feliz
     //2. Teste passando propriedade inválida (name)
