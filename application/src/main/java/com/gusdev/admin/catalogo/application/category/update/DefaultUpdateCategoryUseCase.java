@@ -28,7 +28,7 @@ public class DefaultUpdateCategoryUseCase extends UpdateCategoryUseCase{
         final var isActive = aCommand.isActive();
 
         //Como o findById retorna um Optional, em caso de ID não encontrado, iremos retornar um erro DomainException
-        final var aCategory = this.categoryGateway.findById(anId).orElseThrow(notFound(anId));
+         final var aCategory = this.categoryGateway.findById(anId).orElseThrow(notFound(anId));
 
         final var notification = Notification.create();
 
