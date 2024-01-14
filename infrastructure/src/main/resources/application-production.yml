@@ -1,0 +1,14 @@
+#Configurações do Mysql para o ambiente de produção (production)
+#Como é um ambiente de produção, não é legal deixar setado os valores, vamos adicionar váriáveis de ambiente ${}, pois elas não devem ficar na aplicação
+#Spring vai entender que é uma variável de ambiente e irá tentar ler, caso não encontre, podemos adicionar um valor default :root
+mysql:
+  username: ${DATABASE_MYSQL_USERNAME:root}
+  password: ${DATABASE_MYSQL_PASSWORD:123456}
+  schema: adm_videos
+  url: ${DATABASE_MYSQL_URL:localhost:3306}
+
+spring:
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: none

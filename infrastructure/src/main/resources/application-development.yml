@@ -1,0 +1,20 @@
+#Profiles é uma maneira de você sobrescrever algo de um outro perfil
+#Caso suba com o perfil developmente, digo ao spring que é pra ler 1° a config application e depois sobrescrever com a development
+
+#Configurações do Mysql para o ambiente de desenvolvimento (development)
+mysql:
+  username: root
+  password: 123456
+  schema: adm_videos
+  url: localhost:3306
+
+server:
+  port: 8080 #Qual porta o servidor irá rodar, por padrão é a 8080
+  compression: #Dizer ao servidor (undertown) para que ele comprima toda resposta que ele devolver, que for nesse mime-type e tenho no mínimo 1024 bytes de resposta
+    enabled: true
+    mime-types: text/html, text/xml, text/plain, text/css, text/javascript, application/javascript, application/json
+    min-response-size: 1024
+  undertow:
+    threads: #Configura a quantidade de threads que o servidor irá ter, por padrão são dois: worker e io
+      worker: 10 #quem consome a fila para processar as informações, recomendado 10 por CPU
+      io: 2 #escutando as novas conexões (sockets de entrada) e jogam elas para serem processadas em uma fila, o ideal é uma por CPU

@@ -1,0 +1,18 @@
+version: '3.7' #Versão de configuração do docker
+
+services: #Instanciar todos os containers dentro de services
+  mysql: #1° container
+    container_name: adm_videos_mysql
+    image: mysql:latest
+    environment: #Propriedades que passamos para o container
+      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_DATABASE=adm_videos #schema
+    security_opt:
+      - seccomp:unconfined #config apenas para o linux, desativar algumas features de segurança
+    ports:
+      - 3306:3306 #porta externa do container, porta do host ao qual a aplicação vai conectar : porta do container
+    networks:
+      - adm_videos_network
+
+networks:
+  adm_videos_network:

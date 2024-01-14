@@ -1,0 +1,37 @@
+server:
+  port: 8080 #Qual porta o servidor irá rodar, por padrão é a 8080
+  compression: #Dizer ao servidor (undertown) para que ele comprima toda resposta que ele devolver, que for nesse mime-type e tenho no mínimo 1024 bytes de resposta
+    enabled: true
+    mime-types: text/html, text/xml, text/plain, text/css, text/javascript, application/javascript, application/json
+    min-response-size: 1024
+  undertow:
+    threads: #Configura a quantidade de threads que o servidor irá ter, por padrão são dois: worker e io
+      worker: 64 #quem consome a fila para processar as informações, recomendado 10 por CPU
+      io: 4 #escutando as novas conexões (sockets de entrada) e jogam elas para serem processadas em uma fila, o ideal é uma por CPU
+
+#Precisamos dizer para o spring como ele irá se comunicar com o datasource (que é o mysql)
+spring:
+  datasource: #Onde irá buscar as configurações para se comunicar com o BD
+    url: jdbc:mysql://${mysql.url}/${mysql.schema}?useSSL=true&serverTimezone=UTC&characterEncoding=UTF-8
+    username: ${mysql.username}
+    password: ${mysql.password}
+    hikari:
+      auto-commit: false
+      connection-timeout: 250 #é uma configuração em ms. O ideal é manter baixo para que estoure timeout logo e não prenda as threads.
+      max-lifetime: 600000 #tempo máximo que uma conexão pode ficar aberta (10 min) - security
+      maximum-pool-size: 20 #mantemos até no max 20 conexões com o BD. O ideal é manter baixo mesmo.
+      minimum-idle: 10 #caso sua aplicação nãoe esteja sendo muito utilizada, ele reduz o número de conexões
+      pool-name: master
+  jpa:
+    open-in-view: false #abrir uma conexão com o BD, um escopo transacional com BD desde o controller.
+    show-sql: true #printa todas as Querys feitas na camada de persistência
+    hibernate:
+      ddl-auto: none #digo pro hibernate criar e atualizar o schema do BD automaticamente
+    properties:
+      "[hibernate.dialect]": org.hibernate.dialect.MySQL5InnoDBDialect #informo o dialeto do hibernate
+      "[hibernate.generate_statistics]": false #printa estatísticas do hibernate, deixa o log poluído
+      "[hibernate.connection.provider_disables_autocommit]": true #informo que desabilitado o autocommit lá em cima
+      # Para aumentar a performace ao máximo, desabilitamos o auto-commit e o open-in-view.
+      # https://vladmihalcea.com/why-you-should-always-use-hibernate-connection-provider_disables_autocommit-for-resource-local-jpa-transactions/
+
+

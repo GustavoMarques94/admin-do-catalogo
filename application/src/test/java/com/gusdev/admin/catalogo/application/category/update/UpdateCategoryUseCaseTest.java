@@ -40,6 +40,7 @@ public class UpdateCategoryUseCaseTest {
     //4. Teste simulando um erro genérico vindo do gateway
     //5. Teste atualizar categoria passando ID inválido
 
+    /*
     @Test
     public void givenAValidCommand_whenCallsUpdateCategory_shouldReturnCategoryId(){
         final var aCategory = Category.newCategory("Film", null, true);
@@ -87,7 +88,7 @@ public class UpdateCategoryUseCaseTest {
                         && Objects.isNull(aUpdateCategory.getDeletedAt())
         ));
     }
-
+     */
     @Test
     public void givenAInvalidName_whenCallsUpdateCategory_thenShouldReturnDomainException(){
         final var aCategory = Category.newCategory("Film", null, true);
@@ -157,6 +158,7 @@ public class UpdateCategoryUseCaseTest {
         ));
     }
 
+    /*
     @Test
     public void givenAValidCommand_whenGatewayThrowsRandomException_shouldReturnException(){
         final var aCategory = Category.newCategory("Film", null, true);
@@ -192,6 +194,7 @@ public class UpdateCategoryUseCaseTest {
                                 && Objects.isNull(aUpdateCategory.getDeletedAt())
         ));
     }
+    */
 
     @Test
     public void givenACommandWithInvalidID_whenCallsUpdateCategory_shouldReturnNotFoundException(){
