@@ -1,6 +1,6 @@
 
 CREATE TABLE category(
-    id VARCHAR(36) NOT NULL PRIMARY KEY, --PK sinaliza que precisa criar uma UNIQUE, uma UNIQUE já é um index, então não é necessário criar um index
+    id VARCHAR(36) NOT NULL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     description VARCHAR(4000),
     active BOOLEAN NOT NULL DEFAULT TRUE,
