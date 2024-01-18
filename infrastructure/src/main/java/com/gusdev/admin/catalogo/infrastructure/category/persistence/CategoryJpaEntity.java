@@ -58,7 +58,7 @@ public class CategoryJpaEntity {
                 aCategory.getName(),
                 aCategory.getDescription(),
                 aCategory.isActive(),
-                aCategory.getDeletedAt(),
+                aCategory.getCreatedAt(),
                 aCategory.getUpdatedAt(),
                 aCategory.getDeletedAt()
         );

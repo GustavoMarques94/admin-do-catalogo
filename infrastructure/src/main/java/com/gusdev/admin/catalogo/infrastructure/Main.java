@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.AbstractEnvironment;
 
 import java.util.List;
+import java.util.Optional;
 
 @SpringBootApplication //Notação fala pro Spring que ele tem que configurar algumas classes
 public class Main {
@@ -27,13 +28,11 @@ public class Main {
     @Bean
     public ApplicationRunner runner(CategoryRepository repository){
         return args -> {
-            List<CategoryJpaEntity> all = repository.findAll();
-
             Category filmes = Category.newCategory("Filmes", null, true);
 
             repository.saveAndFlush(CategoryJpaEntity.from(filmes));
 
-            System.out.println("Teste");
+            List<CategoryJpaEntity> all = repository.findAll();
 
             repository.deleteAll();
 

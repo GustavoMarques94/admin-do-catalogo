@@ -36,7 +36,6 @@ public class Category extends AggregateRoot<CategoryID> implements Cloneable {
         final var id = CategoryID.unique(); // ID gerado randomicamente pela JVM
         final var now = Instant.now();
         final var deletedAt = isActive ? null : now;
-        System.out.println("Teste =====> " + now);
         return new Category(id, aName, aDescription, isActive, now, now, deletedAt);
     }
 
