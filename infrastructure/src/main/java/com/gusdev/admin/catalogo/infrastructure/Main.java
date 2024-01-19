@@ -24,18 +24,4 @@ public class Main {
         //Charmar o SpringApplication
         SpringApplication.run(WebServerConfig.class, args);
     }
-
-    @Bean
-    public ApplicationRunner runner(CategoryRepository repository){
-        return args -> {
-            Category filmes = Category.newCategory("Filmes", null, true);
-
-            repository.saveAndFlush(CategoryJpaEntity.from(filmes));
-
-            List<CategoryJpaEntity> all = repository.findAll();
-
-            repository.deleteAll();
-
-        };
-    }
 }
