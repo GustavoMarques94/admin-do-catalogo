@@ -1,6 +1,7 @@
 package com.gusdev.admin.catalogo.infrastructure;
 
 import com.gusdev.admin.catalogo.domain.category.Category;
+import com.gusdev.admin.catalogo.infrastructure.category.CategoryMySQLGateway;
 import com.gusdev.admin.catalogo.infrastructure.category.persistence.CategoryJpaEntity;
 import com.gusdev.admin.catalogo.infrastructure.category.persistence.CategoryRepository;
 import com.gusdev.admin.catalogo.infrastructure.configuration.WebServerConfig;

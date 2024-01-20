@@ -1,7 +1,6 @@
 package com.gusdev.admin.catalogo.infrastructure.category;
 
 //Implementação de fato do Gateway
-//
 
 import com.gusdev.admin.catalogo.domain.category.Category;
 import com.gusdev.admin.catalogo.domain.category.CategoryGateway;
@@ -16,7 +15,7 @@ import java.util.Optional;
 @Service //Podemos anotar com @Component ou @Service, depende da perspectiva, fazem a mesma coisa
 public class CategoryMySQLGateway implements CategoryGateway { //devo implementar todos os métodos definidos pela interface CategoryGateway
 
-    private final CategoryRepository repository;
+    private final CategoryRepository repository; //O repository que se comunica de fato com o hibernate, faz toda comunição (é o ORM)
 
     public CategoryMySQLGateway(final CategoryRepository repository) {
         this.repository = repository;
