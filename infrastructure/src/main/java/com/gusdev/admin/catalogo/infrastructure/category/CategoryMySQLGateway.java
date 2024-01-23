@@ -7,6 +7,7 @@ import com.gusdev.admin.catalogo.domain.category.CategoryGateway;
 import com.gusdev.admin.catalogo.domain.category.CategoryID;
 import com.gusdev.admin.catalogo.domain.category.CategorySeachQuery;
 import com.gusdev.admin.catalogo.domain.pagination.Pagination;
+import com.gusdev.admin.catalogo.infrastructure.category.persistence.CategoryJpaEntity;
 import com.gusdev.admin.catalogo.infrastructure.category.persistence.CategoryRepository;
 import org.springframework.stereotype.Service;
 
@@ -22,8 +23,9 @@ public class CategoryMySQLGateway implements CategoryGateway { //devo implementa
     }
 
     @Override
-    public Category create(Category aCategory) {
-        return null;
+    public Category create(final Category aCategory) {
+        //Geramos um JpaEntity de categoria a partir do agregado, manda salvar, e o que retornar converte para toAggregate
+        return this.repository.save(CategoryJpaEntity.from(aCategory)).toAggregate();
     }
 
     @Override

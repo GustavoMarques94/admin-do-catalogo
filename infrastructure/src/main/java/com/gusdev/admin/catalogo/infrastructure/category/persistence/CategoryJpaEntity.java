@@ -70,7 +70,7 @@ public class CategoryJpaEntity {
                 getName(),
                 getDescription(),
                 isActive(),
-                getDeletedAt(),
+                getCreatedAt(),
                 getUpdatedAt(),
                 getDeletedAt()
         );
