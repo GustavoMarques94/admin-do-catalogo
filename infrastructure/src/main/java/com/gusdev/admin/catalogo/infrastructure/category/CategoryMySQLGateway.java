@@ -28,8 +28,7 @@ public class CategoryMySQLGateway implements CategoryGateway { //devo implementa
 
     @Override
     public Category create(final Category aCategory) {
-        //Geramos um JpaEntity de categoria a partir do agregado, manda salvar, e o que retornar converte para toAggregate
-        return this.repository.save(CategoryJpaEntity.from(aCategory)).toAggregate();
+        return save(aCategory);
     }
 
     @Override
@@ -43,8 +42,8 @@ public class CategoryMySQLGateway implements CategoryGateway { //devo implementa
     }
 
     @Override
-    public Category update(Category aCategory) {
-        return null;
+    public Category update(final Category aCategory) {
+        return save(aCategory);
     }
 
     @Override
@@ -84,6 +83,11 @@ public class CategoryMySQLGateway implements CategoryGateway { //devo implementa
         final Specification<CategoryJpaEntity> nameLike = SpecificationUtils.like("name", str);
         final Specification<CategoryJpaEntity> descriptionLike = SpecificationUtils.like("description", str);
         return nameLike.or(descriptionLike);
+    }
+
+    private Category save(final Category aCategory) {
+        //Geramos um JpaEntity de categoria a partir do agregado, manda salvar, e o que retornar converte para toAggregate
+        return this.repository.save(CategoryJpaEntity.from(aCategory)).toAggregate();
     }
 
 }

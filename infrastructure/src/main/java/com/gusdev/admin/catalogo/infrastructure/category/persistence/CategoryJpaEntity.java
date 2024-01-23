@@ -9,7 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.time.Instant;
 
-@Entity //Digo que é uma entidade utilizada para persistência
+// Digo que é uma entidade utilizada para persistência
+@Entity(name = "Category") // se usar como a seguir '@Entity(name = "Category")' no repository não precisa usar CategoryJpaEntity basta usar Category
 @Table(name = "category") //Digo qual nome da tabela no bd
 public class CategoryJpaEntity {
 
