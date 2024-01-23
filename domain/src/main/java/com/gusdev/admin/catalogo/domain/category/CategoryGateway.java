@@ -1,7 +1,9 @@
 package com.gusdev.admin.catalogo.domain.category;
 
 import com.gusdev.admin.catalogo.domain.pagination.Pagination;
+import com.gusdev.admin.catalogo.domain.pagination.SearchQuery;
 
+import java.util.List;
 import java.util.Optional;
 
 //Define um conjunto de métodos que uma classe que deseje manipular categorias deve implementar
@@ -24,5 +26,7 @@ public interface CategoryGateway {
     //<étodo utilizado para encontrar todas as categorias com base em um objeto 'CategorySeachQuery'
     //Ele retorna um objeto de 'Pagination<Category>', que contém informações sobre... olhar o record 'Pagination'
     //'CategorySeachQuery' e 'Pagination' são utilizados para passar informações de pesquisa e paginação
-    Pagination<Category> findAll(CategorySeachQuery aQuery);
+    Pagination<Category> findAll(SearchQuery aQuery);
+
+    List<CategoryID> existByIds(Iterable<CategoryID> ids);
 }

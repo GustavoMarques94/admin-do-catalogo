@@ -6,6 +6,7 @@ import com.gusdev.admin.catalogo.domain.category.Category;
 import com.gusdev.admin.catalogo.domain.category.CategoryGateway;
 import com.gusdev.admin.catalogo.domain.category.CategorySeachQuery;
 import com.gusdev.admin.catalogo.domain.pagination.Pagination;
+import com.gusdev.admin.catalogo.domain.pagination.SearchQuery;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -51,7 +52,7 @@ public class ListCategoriesUseCaseTest {
 
         //2. Temos que mockar a entrada do useCase, que vai ser uma 'CategorySearchQuery'
         final var aQuery =
-                new CategorySeachQuery(expectedPage, expectedPerPage, expectedTerms, expectedSort, expectedDirection);
+                new SearchQuery(expectedPage, expectedPerPage, expectedTerms, expectedSort, expectedDirection);
 
         final var expectedPagination =
                 new Pagination<>(expectedPage, expectedPerPage, categories.size(), categories);
@@ -84,7 +85,7 @@ public class ListCategoriesUseCaseTest {
 
         //2. Temos que mockar a entrada do useCase, que vai ser uma 'CategorySearchQuery'
         final var aQuery =
-                new CategorySeachQuery(expectedPage, expectedPerPage, expectedTerms, expectedSort, expectedDirection);
+                new SearchQuery(expectedPage, expectedPerPage, expectedTerms, expectedSort, expectedDirection);
 
         final var expectedPagination =
                 new Pagination<>(expectedPage, expectedPerPage, categories.size(), categories);
@@ -115,7 +116,7 @@ public class ListCategoriesUseCaseTest {
 
         //2. Temos que mockar a entrada do useCase, que vai ser uma 'CategorySearchQuery'
         final var aQuery =
-                new CategorySeachQuery(expectedPage, expectedPerPage, expectedTerms, expectedSort, expectedDirection);
+                new SearchQuery(expectedPage, expectedPerPage, expectedTerms, expectedSort, expectedDirection);
 
         //3. Mockar a chamada do gateway
         Mockito.when(categoryGateway.findAll(Mockito.eq(aQuery))).thenThrow(new IllegalStateException(expectedErrorMessage));
