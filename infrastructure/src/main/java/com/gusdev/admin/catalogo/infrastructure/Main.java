@@ -1,18 +1,19 @@
 package com.gusdev.admin.catalogo.infrastructure;
 
-import com.gusdev.admin.catalogo.domain.category.Category;
-import com.gusdev.admin.catalogo.infrastructure.category.CategoryMySQLGateway;
-import com.gusdev.admin.catalogo.infrastructure.category.persistence.CategoryJpaEntity;
-import com.gusdev.admin.catalogo.infrastructure.category.persistence.CategoryRepository;
+import com.gusdev.admin.catalogo.application.category.create.CreateCategoryUseCase;
+import com.gusdev.admin.catalogo.application.category.delete.DeleteCategoryUseCase;
+import com.gusdev.admin.catalogo.application.category.retrieve.get.GetCategoryByIdUseCase;
+import com.gusdev.admin.catalogo.application.category.retrieve.list.ListCategoriesUseCase;
+import com.gusdev.admin.catalogo.application.category.update.UpdateCategoryUseCase;
 import com.gusdev.admin.catalogo.infrastructure.configuration.WebServerConfig;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.sql.init.dependency.DependsOnDatabaseInitialization;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.AbstractEnvironment;
 
-import java.util.List;
-import java.util.Optional;
 
 @SpringBootApplication //Notação fala pro Spring que ele tem que configurar algumas classes
 public class Main {

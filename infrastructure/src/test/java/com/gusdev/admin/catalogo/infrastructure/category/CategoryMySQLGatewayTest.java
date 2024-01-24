@@ -2,6 +2,7 @@ package com.gusdev.admin.catalogo.infrastructure.category;
 
 import com.gusdev.admin.catalogo.domain.category.Category;
 import com.gusdev.admin.catalogo.domain.category.CategoryID;
+import com.gusdev.admin.catalogo.domain.pagination.SearchQuery;
 import com.gusdev.admin.catalogo.infrastructure.MySQLGatewayTest;
 import com.gusdev.admin.catalogo.infrastructure.category.persistence.CategoryJpaEntity;
 import com.gusdev.admin.catalogo.infrastructure.category.persistence.CategoryRepository;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 //Classe que irá acoplar todos os testes do Gateway
+@SuppressWarnings("all")
 @MySQLGatewayTest // All agregado que desejar fazer teste com o tipo MySQLGateway é só anotar com essa anotação que já estará configurado
 public class CategoryMySQLGatewayTest {
 
@@ -142,15 +144,50 @@ public class CategoryMySQLGatewayTest {
         Assertions.assertEquals(0, categoryRepository.count());
     }
 
+    @Test
+    public void givenAPrePersistedCategoryAndValidCategoryId_whenCallsFindById_shouldReturnCategory(){
+        final var expectedName = "Filmes";
+        final var expectedDescription = "A categoria mais assistida";
+        final var expectedIsActive = true;
 
+        final var aCategory = Category.newCategory(expectedName, expectedDescription, expectedIsActive);
 
+        Assertions.assertEquals(0, categoryRepository.count());
 
+        categoryRepository.saveAndFlush(CategoryJpaEntity.from(aCategory));
 
+        final var actualCategory = categoryMySqlGateway.findById(aCategory.getId()).get();
 
+        //Assert para verificar que ainda tenha apenas uma informação no BD
+        Assertions.assertEquals(1, categoryRepository.count());
 
-    /*
+        //Assert do que retornou do gateway
+        Assertions.assertEquals(aCategory.getId(), actualCategory.getId());
+        Assertions.assertEquals(expectedName, actualCategory.getName());
+        Assertions.assertEquals(expectedDescription, actualCategory.getDescription());
+        Assertions.assertEquals(expectedIsActive, actualCategory.isActive());
+        Assertions.assertEquals(aCategory.getCreatedAt(), actualCategory.getCreatedAt());
+        Assertions.assertEquals(aCategory.getUpdatedAt(),actualCategory.getUpdatedAt());
+        Assertions.assertEquals(aCategory.getDeletedAt(), actualCategory.getDeletedAt());
+        Assertions.assertNull(actualCategory.getDeletedAt());
+    }
+
+    @Test
+    public void givenValidCategoryIdNotStored_whenCallsFindById_shouldReturnEmpty(){
+        Assertions.assertEquals(0, categoryRepository.count());
+
+        final var actualCategory = categoryMySqlGateway.findById(CategoryID.from("empty"));
+
+        //Assert do que retornou do gateway
+        Assertions.assertTrue(actualCategory.isEmpty());
+    }
+
     @Test
     public void givenPrePersistedCategories_whenCallsFindAll_shouldReturnPaginated(){
+        final var expectedPage = 0;
+        final var expectedPerPage = 1;
+        final var expectedTotal = 3;
+
         final var filme = Category.newCategory("Filmes", "The category most watched", true);
         final var serie = Category.newCategory("Series", "The most fun series", true);
         final var documentary = Category.newCategory("Documentaries", "A vision of the reality", true);
@@ -161,6 +198,8 @@ public class CategoryMySQLGatewayTest {
                 CategoryJpaEntity.from(documentary)
         ));
 
+        Assertions.assertEquals(3, categoryRepository.count());
+
         final var query = new SearchQuery(1, 1, "", "name", "desc");
         final var categories = categoryMySqlGateway.findAll(query);
 
@@ -170,7 +209,6 @@ public class CategoryMySQLGatewayTest {
         Assertions.assertEquals("Filmes", categories.items().get(0).getName());
         Assertions.assertEquals("The category most watched", categories.items().get(0).getDescription());
         Assertions.assertTrue(categories.items().get(0).isActive());
-
     }
 
     @Test
@@ -178,10 +216,12 @@ public class CategoryMySQLGatewayTest {
         final var expectedPage = 0;
         final var expectedPerPage = 1;
         final var expectedTotal = 0;
+
         Assertions.assertEquals(0, categoryRepository.count());
 
         final var query = new SearchQuery(0, 1, "", "name", "asc");
         final var actualResult = categoryMySqlGateway.findAll(query);
+
         Assertions.assertEquals(expectedPage, actualResult.currentPage());
         Assertions.assertEquals(expectedPerPage, actualResult.perPage());
         Assertions.assertEquals(0, actualResult.items().size());
@@ -204,9 +244,10 @@ public class CategoryMySQLGatewayTest {
         ));
 
         Assertions.assertEquals(3, categoryRepository.count());
-        final var query = new SearchQuery(1, 1, "", "name", "asc");
 
+        final var query = new SearchQuery(1, 1, "", "name", "asc");
         final var actualResult = categoryMySqlGateway.findAll(query);
+
         Assertions.assertEquals(expectedPage, actualResult.currentPage());
         Assertions.assertEquals(expectedPerPage, actualResult.perPage());
         Assertions.assertEquals(1, actualResult.items().size());
@@ -215,6 +256,33 @@ public class CategoryMySQLGatewayTest {
         Assertions.assertEquals(actualResult.items().get(0).getId().getValue(), filme.getId().getValue());
         Assertions.assertEquals(actualResult.items().get(0).getDescription(), filme.getDescription());
     }
-    */
+
+    @Test
+    public void givenPrePersistedCategoriesAndDocAsTerms_whenCallsFindAllAndTermsMatchsCategoryName_shouldReturnPaginated(){
+        //TODO NOT WORKING
+        final var expectedPage = 1;
+        final var expectedPerPage = 10;
+        final var expectedTotal = 1;
+        final var filme = Category.newCategory("Filmes", "The category most watched", true);
+        final var serie = Category.newCategory("Series", "The most fun series", true);
+        final var documentary = Category.newCategory("Documentaries", "A vision of the reality", true);
+
+        categoryRepository.saveAllAndFlush(List.of(
+                CategoryJpaEntity.from(filme),
+                CategoryJpaEntity.from(serie),
+                CategoryJpaEntity.from(documentary)
+        ));
+
+        Assertions.assertEquals(3, categoryRepository.count());
+
+        final var query = new SearchQuery(1, 10, "doc", "name", "asc");
+        final var actualResult = categoryMySqlGateway.findAll(query);
+
+        Assertions.assertEquals(expectedPage, actualResult.currentPage());
+        Assertions.assertEquals(expectedPerPage, actualResult.perPage());
+        Assertions.assertEquals(expectedTotal, actualResult.total());
+
+    }
+
 }
 

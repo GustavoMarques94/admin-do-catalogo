@@ -40,8 +40,9 @@ public class CategoryMySQLGateway implements CategoryGateway { //devo implementa
     }
 
     @Override
-    public Optional<Category> findById(CategoryID anId) {
-        return Optional.empty();
+    public Optional<Category> findById(final CategoryID anId) {
+        return this.repository.findById(anId.getValue()) //busco a informação no Banco, irá retornar um Optional, pois a informação pode não existir no BD
+                .map(CategoryJpaEntity::toAggregate); // se não existir, não entra no map; se existir entra no map e converte o que estava no BD para agregado de categoria
     }
 
     @Override
