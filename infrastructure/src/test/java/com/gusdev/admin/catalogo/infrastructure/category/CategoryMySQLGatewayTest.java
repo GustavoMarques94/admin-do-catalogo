@@ -3,7 +3,7 @@ package com.gusdev.admin.catalogo.infrastructure.category;
 import com.gusdev.admin.catalogo.domain.category.Category;
 import com.gusdev.admin.catalogo.domain.category.CategoryID;
 import com.gusdev.admin.catalogo.domain.pagination.SearchQuery;
-import com.gusdev.admin.catalogo.infrastructure.MySQLGatewayTest;
+import com.gusdev.admin.catalogo.MySQLGatewayTest;
 import com.gusdev.admin.catalogo.infrastructure.category.persistence.CategoryJpaEntity;
 import com.gusdev.admin.catalogo.infrastructure.category.persistence.CategoryRepository;
 import org.junit.jupiter.api.Assertions;

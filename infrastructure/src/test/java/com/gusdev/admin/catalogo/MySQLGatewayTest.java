@@ -1,4 +1,4 @@
-package com.gusdev.admin.catalogo.infrastructure;
+package com.gusdev.admin.catalogo;
 
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,24 +23,7 @@ import java.util.Collection;
 }) //Digo para o Spring o que é para ele configurar além do que o #DataJpaTest configurou
 //Esse tipo de filtro é um macete, vai ser através de REGEX, digo que quero buscar todas as classes que terminam com MySQLGateway
 @DataJpaTest //Esse teste configura somente o necessário para testar o repositório //Problema de usar o DataJpaTest é que ele não enxerga o nosso gateway que está anotado com @service, porém ele é muito mais rápido
-@ExtendWith(MySQLGatewayTest.CleanUpExtensions.class) //Extendo a classe 'CleanUpExtensions'
+@ExtendWith(CleanUpExtension.class) //Extendo a classe 'CleanUpExtensions'
 public @interface MySQLGatewayTest {
 
-    //Deletar todas as informações que foram previamente manipuladas pelo teste anterior, para garantir isolamente e um teste não impacte outro
-    class CleanUpExtensions implements BeforeEachCallback { //E como utilizar essa extensão? com a anotação @ExtendWith lá em cima
-
-        @Override
-        public void beforeEach(final ExtensionContext context) throws Exception {
-            final var repositories = SpringExtension
-                    .getApplicationContext(context)
-                    .getBeansOfType(CrudRepository.class) // 'CrudRepository' Interface mais alto nível; iremos precisar do método deleteAll();
-                    .values();
-
-            cleanUp(repositories); //Chamo cleanUP para todos os Repositórios que foram encontrados
-        }
-
-        private void cleanUp(final Collection<CrudRepository> repositories) {
-            repositories.forEach(CrudRepository::deleteAll); //Chamo forEach passando 'DeleteAll' como Method Reference
-        }
-    }
 }
