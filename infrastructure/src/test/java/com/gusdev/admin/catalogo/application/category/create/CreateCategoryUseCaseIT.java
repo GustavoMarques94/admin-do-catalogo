@@ -9,14 +9,11 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 
-import java.util.Objects;
-
-import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
 
 
 @IntegrationTest
-public class CreateCategoryUseCaseTestIT {
+public class CreateCategoryUseCaseIT {
 
     @Autowired
     private CreateCategoryUseCase useCase;
