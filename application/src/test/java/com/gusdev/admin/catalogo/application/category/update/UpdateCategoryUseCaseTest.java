@@ -77,8 +77,8 @@ public class UpdateCategoryUseCaseTest {
 
         Mockito.verify(categoryGateway, Mockito.times(1)).findById(Mockito.eq(expectedId));
         //Verifica pra mim se irá chamar uma única vez o méotdo 'update' da classe 'categoryGateway' passando o argumento 'aUpdateCategory'
-        Mockito.verify(categoryGateway, Mockito.times(1)).update(Mockito.argThat(
-                aUpdateCategory ->
+        Mockito.verify(categoryGateway, Mockito.times(1))
+                .update(Mockito.argThat( aUpdateCategory ->
                     Objects.equals(expectedName, aUpdateCategory.getName())
                         && Objects.equals(expectedDescription, aUpdateCategory.getDescription())
                         && Objects.equals(expectedIsActive, aUpdateCategory.isActive())
@@ -88,7 +88,8 @@ public class UpdateCategoryUseCaseTest {
                         && Objects.isNull(aUpdateCategory.getDeletedAt())
         ));
     }
-     */
+    */
+
     @Test
     public void givenAInvalidName_whenCallsUpdateCategory_thenShouldReturnDomainException(){
         final var aCategory = Category.newCategory("Film", null, true);
@@ -158,9 +159,9 @@ public class UpdateCategoryUseCaseTest {
         ));
     }
 
-    /*
+
     @Test
-    public void givenAValidCommand_whenGatewayThrowsRandomException_shouldReturnException(){
+    public void givenAValidCommand_whenGatewayThrowsRandomException_shouldReturnAException(){
         final var aCategory = Category.newCategory("Film", null, true);
 
         final var expectedName = "Filmes";
@@ -170,21 +171,22 @@ public class UpdateCategoryUseCaseTest {
         final var expectedErrorMessage = "Gateway Error";
         final var expectedErrorCount = 1;
 
-        final var aCommand = UpdateCategoryCommand.with(expectedId.getValue(), expectedName, expectedDescription, expectedIsActive);
+        final var aCommand =
+                UpdateCategoryCommand.with(expectedId.getValue(), expectedName, expectedDescription, expectedIsActive);
 
         Mockito.when(categoryGateway.findById(Mockito.eq(expectedId)))
                 .thenReturn(Optional.of(Category.with(aCategory)));
 
         Mockito.when(categoryGateway.update(any()))
-                .thenThrow(new IllegalStateException("Gateway Error"));
+                .thenThrow(new IllegalStateException(expectedErrorMessage));
 
         final var notification = useCase.execute(aCommand).getLeft();
 
         Assertions.assertEquals(expectedErrorCount, notification.getErrors().size());
         Assertions.assertEquals(expectedErrorMessage, notification.firstError().message());
 
-        Mockito.verify(categoryGateway, Mockito.times(1)).update(Mockito.argThat(
-                aUpdateCategory ->
+        Mockito.verify(categoryGateway, Mockito.times(1))
+                .update(Mockito.argThat( aUpdateCategory ->
                         Objects.equals(expectedName, aUpdateCategory.getName())
                                 && Objects.equals(expectedDescription, aUpdateCategory.getDescription())
                                 && Objects.equals(expectedIsActive, aUpdateCategory.isActive())
@@ -194,7 +196,7 @@ public class UpdateCategoryUseCaseTest {
                                 && Objects.isNull(aUpdateCategory.getDeletedAt())
         ));
     }
-    */
+
 
     @Test
     public void givenACommandWithInvalidID_whenCallsUpdateCategory_shouldReturnNotFoundException(){
