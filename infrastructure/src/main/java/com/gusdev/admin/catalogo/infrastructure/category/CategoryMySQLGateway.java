@@ -12,6 +12,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
@@ -34,9 +36,10 @@ public class CategoryMySQLGateway implements CategoryGateway { //devo implementa
     @Override
     public void deleteById(final CategoryID anId) {
         final String id = anId.getValue();
-        //if (this.repository.existeByIds(id)) {
+        List<String> retorno = this.repository.existeByIds(Arrays.asList(id));
+        if (!retorno.isEmpty()){
             this.repository.deleteById(id);
-        //}
+        }
     }
 
     @Override
