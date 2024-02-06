@@ -19,7 +19,7 @@ import java.util.Collection;
 @ActiveProfiles("test") //Ativo o perfil de test para ele configurar o H2
 //@SpringBootTest //Problema ao utilizar essa notação, o spring irá subir o contexto inteiro, absoluto; E esse não é nosso objetivo nesse momento, essa anotação é bom para testes integrados (end-to-end)
 @ComponentScan(includeFilters = {
-        @ComponentScan.Filter(type = FilterType.REGEX, pattern = ".*[MySQLGateway]")
+        @ComponentScan.Filter(type = FilterType.REGEX, pattern = ".[MySQLGateway]")
 }) //Digo para o Spring o que é para ele configurar além do que o #DataJpaTest configurou
 //Esse tipo de filtro é um macete, vai ser através de REGEX, digo que quero buscar todas as classes que terminam com MySQLGateway
 @DataJpaTest //Esse teste configura somente o necessário para testar o repositório //Problema de usar o DataJpaTest é que ele não enxerga o nosso gateway que está anotado com @service, porém ele é muito mais rápido
