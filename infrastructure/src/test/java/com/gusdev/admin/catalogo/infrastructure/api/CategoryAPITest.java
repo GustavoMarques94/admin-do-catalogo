@@ -47,19 +47,22 @@ public class CategoryAPITest {
                 new CreateCategoryApiInput(expectedName, expectedDescription, expectedIsActive);
 
         Mockito.when(createCategoryUseCase.execute(Mockito.any()))
-                .thenReturn(API.Right(CreateCategoryOutput.from(CategoryID.from("123"))));
+                .thenReturn(API.Right(CreateCategoryOutput.from(CategoryID.from("123")))); //Temos que retornar um Either de API.Right, e ele espera um retorno que é o retorno do nosso caso de uso 'CategoryOutput'
 
         final var request = MockMvcRequestBuilders.post("/categories")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(this.mapper.writeValueAsString(anInput));
+                .contentType(MediaType.APPLICATION_JSON) //Json como tipo de conteúdo
+                .content(this.mapper.writeValueAsString(anInput)); //Que Json iremos enviar? um conteúdo (CreateCategoryApiInput)
+                //O 'writeValueAsString' lança uma 'Exception' então devemos especificar no método que ele faz um throws de Exception (Como é um método de teste não tem problema)
 
-        this.mvc.perform(request)
+        this.mvc.perform(request) //Estou dizendo que ele irá performar uma ação, mas que ação? o 'request' instanciado a cima irá performar está requisição
                 .andDo(MockMvcResultHandlers.print())
-                .andExpectAll(
-                        MockMvcResultMatchers.status().isCreated(),
-                        MockMvcResultMatchers.header().string("Location", "/categories/123")
+                .andExpectAll( //iremos passar uma lista de predicados
+                        MockMvcResultMatchers.status().isCreated(), //Essse é o cara que nós esperamos
+                        MockMvcResultMatchers.header().string("Location", "/categories/123") //O que espero  chegar no header
                 );
 
+        //Estou dizendo que espero que 'createCategoryUseCase' tenha sido chamado apenas uma vez o método execute, (linha 49)
+        //Com isso iremos verificar o argumento que ele recebeu com argThat, fazendo um verify do argumento recebido
         Mockito.verify(createCategoryUseCase, Mockito.times(1)).execute(Mockito.argThat(cmd ->
                 Objects.equals(expectedName, cmd.name()) &&
                         Objects.equals(expectedDescription, cmd.description()) &&

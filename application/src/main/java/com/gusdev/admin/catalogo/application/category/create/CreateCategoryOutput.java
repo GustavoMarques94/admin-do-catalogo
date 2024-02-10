@@ -4,8 +4,7 @@ import com.gusdev.admin.catalogo.domain.category.Category;
 import com.gusdev.admin.catalogo.domain.category.CategoryID;
 
 public record CreateCategoryOutput(
-        //O output não precisa ter todas as informações, apenas o ID da categoria recém criada
-        CategoryID id
+        CategoryID id //O output não precisa ter todas as informações, apenas o ID da categoria recém criada
 ) {
 
     public static CreateCategoryOutput from(final CategoryID anId){
