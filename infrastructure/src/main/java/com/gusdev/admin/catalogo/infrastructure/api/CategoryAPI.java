@@ -3,14 +3,15 @@ package com.gusdev.admin.catalogo.infrastructure.api;
 //Vamos difinir quais o métodos a API irá expor, e também a parte de documentação com springDocs
 
 import com.gusdev.admin.catalogo.domain.pagination.Pagination;
+import com.gusdev.admin.catalogo.infrastructure.category.models.CreateCategoryApiInput;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 @RequestMapping(value = "categories") //tanto faz colocar com / ou sem /, o spring entende e vai tratar isso
 @Tag(name = "Categories") //Nome do Resource que estamos espondo
@@ -28,7 +29,8 @@ public interface CategoryAPI {
            @ApiResponse(responseCode = "422", description = "A validation error was thrown"),
            @ApiResponse(responseCode = "500", description = "An internal server error was thrown"),
     })
-    ResponseEntity<?> createCategory();
+    ResponseEntity<?> createCategory(@RequestBody CreateCategoryApiInput input); //Informo na assinatura do método que ele irá receber um Json chamado Input; E como o Spring faz o bing do Json que veio do Body da requisição para um Objeto? '@RequestBody'
+
 
     @GetMapping
     @Operation(summary = "List all categories paginated")

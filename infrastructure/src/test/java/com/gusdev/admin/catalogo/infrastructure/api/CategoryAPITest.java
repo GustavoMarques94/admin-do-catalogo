@@ -1,15 +1,12 @@
 package com.gusdev.admin.catalogo.infrastructure.api;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gusdev.admin.catalogo.ControllerTest;
-import com.gusdev.admin.catalogo.application.category.create.CreateCategoryCommand;
 import com.gusdev.admin.catalogo.application.category.create.CreateCategoryOutput;
 import com.gusdev.admin.catalogo.application.category.create.CreateCategoryUseCase;
-import com.gusdev.admin.catalogo.domain.category.CategoryID;
 import com.gusdev.admin.catalogo.infrastructure.category.models.CreateCategoryApiInput;
 import io.vavr.API;
-import org.junit.jupiter.api.Assertions;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +44,7 @@ public class CategoryAPITest {
                 new CreateCategoryApiInput(expectedName, expectedDescription, expectedIsActive);
 
         Mockito.when(createCategoryUseCase.execute(Mockito.any()))
-                .thenReturn(API.Right(CreateCategoryOutput.from(CategoryID.from("123")))); //Temos que retornar um Either de API.Right, e ele espera um retorno que é o retorno do nosso caso de uso 'CategoryOutput'
+                .thenReturn(API.Right(CreateCategoryOutput.from("123"))); //Temos que retornar um Either de API.Right, e ele espera um retorno que é o retorno do nosso caso de uso 'CategoryOutput'
 
         final var request = MockMvcRequestBuilders.post("/categories")
                 .contentType(MediaType.APPLICATION_JSON) //Json como tipo de conteúdo
@@ -56,10 +53,11 @@ public class CategoryAPITest {
 
         this.mvc.perform(request) //Estou dizendo que ele irá performar uma ação, mas que ação? o 'request' instanciado a cima irá performar está requisição
                 .andDo(MockMvcResultHandlers.print())
-                .andExpectAll( //iremos passar uma lista de predicados
-                        MockMvcResultMatchers.status().isCreated(), //Essse é o cara que nós esperamos
-                        MockMvcResultMatchers.header().string("Location", "/categories/123") //O que espero  chegar no header
-                );
+                //iremos passar uma lista de predicados
+                .andExpect(MockMvcResultMatchers.status().isCreated()) //Essse é o cara que nós esperamos
+                .andExpect(MockMvcResultMatchers.header().string("Location", "/categories/123")) //O que espero  chegar no header
+                .andExpect(MockMvcResultMatchers.header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.equalTo("123")));
 
         //Estou dizendo que espero que 'createCategoryUseCase' tenha sido chamado apenas uma vez o método execute, (linha 49)
         //Com isso iremos verificar o argumento que ele recebeu com argThat, fazendo um verify do argumento recebido
