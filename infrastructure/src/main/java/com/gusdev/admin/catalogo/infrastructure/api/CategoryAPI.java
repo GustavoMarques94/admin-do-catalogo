@@ -3,6 +3,7 @@ package com.gusdev.admin.catalogo.infrastructure.api;
 //Vamos difinir quais o métodos a API irá expor, e também a parte de documentação com springDocs
 
 import com.gusdev.admin.catalogo.domain.pagination.Pagination;
+import com.gusdev.admin.catalogo.infrastructure.category.models.CategoryApiOutput;
 import com.gusdev.admin.catalogo.infrastructure.category.models.CreateCategoryApiInput;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -46,4 +47,17 @@ public interface CategoryAPI {
             @RequestParam(name = "sort", required = false, defaultValue = "name") final String sort,
             @RequestParam(name = "dir", required = false, defaultValue = "asc") final String dir
     );
+
+    @GetMapping(
+            value = "{id}",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @Operation(summary = "Get a category by it's identifier")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Category retrieved successfully"),
+            @ApiResponse(responseCode = "404", description = "Category was not found"),
+            @ApiResponse(responseCode = "500", description = "An internal server error was thrown"),
+    })
+    CategoryApiOutput getById(@PathVariable(name = "id") String id); //Informo na assinatura do método que ele irá receber id, o @PathVariable irá fazer o bind do id para String
 }

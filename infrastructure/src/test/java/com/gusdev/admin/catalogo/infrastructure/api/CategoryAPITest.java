@@ -181,20 +181,23 @@ public class CategoryAPITest {
                 .thenReturn(CategoryOutput.from(aCategory));
 
         // when
-        final var request = MockMvcRequestBuilders.get("/categories/{id}", expectedId);
+        final var request = MockMvcRequestBuilders.get("/categories/{id}", expectedId)
+                .accept(MediaType.APPLICATION_JSON) //Digo que aceito o JSON
+                .contentType(MediaType.APPLICATION_JSON);
 
         final var response = this.mvc.perform(request)
                 .andDo(MockMvcResultHandlers.print());
 
         // then
         response.andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.header().string("Content-Type",MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.equalTo(expectedId)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name", Matchers.equalTo(expectedName)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description", Matchers.equalTo(expectedDescription)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.is_active", Matchers.equalTo(expectedIsActive)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.created_at", Matchers.equalTo(aCategory.getCreatedAt().toString())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.updated_at", Matchers.equalTo(aCategory.getUpdatedAt().toString())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.deleted_at", Matchers.equalTo(aCategory.getDeletedAt().toString())));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.deleted_at", Matchers.equalTo(aCategory.getDeletedAt())));
 
         Mockito.verify(getCategoryByIdUseCase, Mockito.times(1)).execute(Mockito.eq(expectedId));
     }
@@ -205,8 +208,15 @@ public class CategoryAPITest {
         final var expetedErrorMessage = "Category with ID 123 was not-found";
         final var expectedId = CategoryID.from("123").getValue();
 
+        Mockito.when(getCategoryByIdUseCase.execute(Mockito.any()))
+                .thenThrow(DomainException.with(
+                        new Error("Category with ID %s was not-found".formatted(expectedId))
+                ));
+
         // when
-        final var request = MockMvcRequestBuilders.get("/categories/{id}", expectedId);
+        final var request = MockMvcRequestBuilders.get("/categories/{id}", expectedId)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON);
 
         final var response = this.mvc.perform(request)
                 .andDo(MockMvcResultHandlers.print());
