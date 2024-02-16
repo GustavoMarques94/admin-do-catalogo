@@ -5,6 +5,7 @@ import com.gusdev.admin.catalogo.domain.category.Category;
 import com.gusdev.admin.catalogo.domain.category.CategoryGateway;
 import com.gusdev.admin.catalogo.domain.category.CategoryID;
 import com.gusdev.admin.catalogo.domain.exceptions.DomainException;
+import com.gusdev.admin.catalogo.domain.exceptions.NotFoundException;
 import com.gusdev.admin.catalogo.infrastructure.category.persistence.CategoryJpaEntity;
 import com.gusdev.admin.catalogo.infrastructure.category.persistence.CategoryRepository;
 import org.junit.jupiter.api.Assertions;
@@ -71,11 +72,11 @@ public class GetCategoryByIdUseCaseIT {
 
     @Test
     public void givenAInvalidId_whenCallsGetCategory_shouldReturnNotFound(){
-        final var expetedErrorMessage = "Category with ID 123 was not-found";
+        final var expetedErrorMessage = "Category with ID 123 was not found";
         final var expectedId = CategoryID.from("123");
 
         final var actualException = Assertions.assertThrows(
-                DomainException.class,
+                NotFoundException.class,
                 () -> useCase.execute(expectedId.getValue()));
 
         Assertions.assertEquals(expetedErrorMessage, actualException.getMessage());

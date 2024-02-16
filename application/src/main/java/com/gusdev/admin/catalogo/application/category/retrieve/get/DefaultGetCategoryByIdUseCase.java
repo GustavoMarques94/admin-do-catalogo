@@ -1,8 +1,10 @@
 package com.gusdev.admin.catalogo.application.category.retrieve.get;
 
+import com.gusdev.admin.catalogo.domain.category.Category;
 import com.gusdev.admin.catalogo.domain.category.CategoryGateway;
 import com.gusdev.admin.catalogo.domain.category.CategoryID;
 import com.gusdev.admin.catalogo.domain.exceptions.DomainException;
+import com.gusdev.admin.catalogo.domain.exceptions.NotFoundException;
 import com.gusdev.admin.catalogo.domain.validation.Error;
 
 import java.util.Objects;
@@ -27,7 +29,7 @@ public class DefaultGetCategoryByIdUseCase extends GetCategoryByIdUseCase{
                 .orElseThrow(notFound(anCategoryID));
     }
 
-    private static Supplier<DomainException> notFound(CategoryID anId) {
-        return () -> DomainException.with(new Error("Category with ID %s was not-found".formatted(anId.getValue())));
+    private static Supplier<NotFoundException> notFound(CategoryID anId) {
+        return () -> NotFoundException.with(Category.class, anId);
     }
 }

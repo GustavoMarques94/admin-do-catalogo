@@ -9,6 +9,7 @@ import com.gusdev.admin.catalogo.application.category.retrieve.get.GetCategoryBy
 import com.gusdev.admin.catalogo.domain.category.Category;
 import com.gusdev.admin.catalogo.domain.category.CategoryID;
 import com.gusdev.admin.catalogo.domain.exceptions.DomainException;
+import com.gusdev.admin.catalogo.domain.exceptions.NotFoundException;
 import com.gusdev.admin.catalogo.domain.validation.Error;
 import com.gusdev.admin.catalogo.domain.validation.handler.Notification;
 import com.gusdev.admin.catalogo.infrastructure.category.models.CreateCategoryApiInput;
@@ -205,16 +206,14 @@ public class CategoryAPITest {
     @Test
     public void givenAInvalidId_whenCallsGetCategory_shouldReturnNotFound() throws Exception{
         // given
-        final var expetedErrorMessage = "Category with ID 123 was not-found";
-        final var expectedId = CategoryID.from("123").getValue();
+        final var expetedErrorMessage = "Category with ID 123 was not found";
+        final var expectedId = CategoryID.from("123");
 
         Mockito.when(getCategoryByIdUseCase.execute(Mockito.any()))
-                .thenThrow(DomainException.with(
-                        new Error("Category with ID %s was not-found".formatted(expectedId))
-                ));
+                .thenThrow(NotFoundException.with(Category.class, expectedId));
 
         // when
-        final var request = MockMvcRequestBuilders.get("/categories/{id}", expectedId)
+        final var request = MockMvcRequestBuilders.get("/categories/{id}", expectedId.getValue())
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON);
 
