@@ -14,7 +14,7 @@ public class NotFoundException extends DomainException {
         super(aMessage, anErrors);
     }
 
-    public static NotFoundException with(
+    public static NotFoundException  with(
             final Class<? extends AggregateRoot<?>> anAggregate,
             final Identifier id
             ){
