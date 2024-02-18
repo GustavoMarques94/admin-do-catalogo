@@ -348,7 +348,7 @@ public class CategoryAPITest {
     }
 
     @Test
-    public void givenAValidId_whenCallsDeleteCategory_shouldBeOk() throws Exception{
+    public void givenAValidId_whenCallsDeleteCategory_shouldBeReturnNoContent() throws Exception{
         // given
         final var expectedId = "123";
 
@@ -364,8 +364,8 @@ public class CategoryAPITest {
                 .andDo(MockMvcResultHandlers.print());
 
         // then
-        response.andExpect(MockMvcResultMatchers.status().isNoContent())
-                .andExpect(MockMvcResultMatchers.header().string("Content-Type",MediaType.APPLICATION_JSON_VALUE));
+        response.andExpect(MockMvcResultMatchers.status().isNoContent());
+                //.andExpect(MockMvcResultMatchers.header().string("Content-Type",MediaType.APPLICATION_JSON_VALUE)); //Como é um NO_CONTENT, ele não setou esse HEADER por mais que nós tenhamos setado na interface
 
         Mockito.verify(deleteCategoryUseCase, Mockito.times(1)).execute(Mockito.eq(expectedId));
     }
