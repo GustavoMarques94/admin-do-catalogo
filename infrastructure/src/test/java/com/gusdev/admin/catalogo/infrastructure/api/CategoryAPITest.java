@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gusdev.admin.catalogo.ControllerTest;
 import com.gusdev.admin.catalogo.application.category.create.CreateCategoryOutput;
 import com.gusdev.admin.catalogo.application.category.create.CreateCategoryUseCase;
+import com.gusdev.admin.catalogo.application.category.delete.DeleteCategoryUseCase;
 import com.gusdev.admin.catalogo.application.category.retrieve.get.CategoryOutput;
 import com.gusdev.admin.catalogo.application.category.retrieve.get.GetCategoryByIdUseCase;
 import com.gusdev.admin.catalogo.application.category.update.UpdateCategoryOutput;
@@ -52,6 +53,9 @@ public class CategoryAPITest {
 
     @MockBean
     private UpdateCategoryUseCase updateCategoryUseCase;
+
+    @MockBean
+    private DeleteCategoryUseCase deleteCategoryUseCase;
 
     //cenário de teste feliz, quando tudo está ok
     @Test
@@ -341,6 +345,29 @@ public class CategoryAPITest {
                         Objects.equals(expectedDescription, cmd.description()) &&
                         Objects.equals(expectedIsActive, cmd.isActive())
         ));
+    }
+
+    @Test
+    public void givenAValidId_whenCallsDeleteCategory_shouldBeOk() throws Exception{
+        // given
+        final var expectedId = "123";
+
+        Mockito.doNothing()
+                .when(deleteCategoryUseCase).execute(Mockito.any());
+
+        // when
+        final var request = MockMvcRequestBuilders.delete("/categories/{id}", expectedId)
+                .accept(MediaType.APPLICATION_JSON) //Digo que aceito o JSON
+                .contentType(MediaType.APPLICATION_JSON);
+
+        final var response = this.mvc.perform(request)
+                .andDo(MockMvcResultHandlers.print());
+
+        // then
+        response.andExpect(MockMvcResultMatchers.status().isNoContent())
+                .andExpect(MockMvcResultMatchers.header().string("Content-Type",MediaType.APPLICATION_JSON_VALUE));
+
+        Mockito.verify(deleteCategoryUseCase, Mockito.times(1)).execute(Mockito.eq(expectedId));
     }
 
 }
