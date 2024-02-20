@@ -7,18 +7,23 @@ import com.gusdev.admin.catalogo.application.category.create.CreateCategoryUseCa
 import com.gusdev.admin.catalogo.application.category.delete.DeleteCategoryUseCase;
 import com.gusdev.admin.catalogo.application.category.retrieve.get.CategoryOutput;
 import com.gusdev.admin.catalogo.application.category.retrieve.get.GetCategoryByIdUseCase;
+import com.gusdev.admin.catalogo.application.category.retrieve.list.CategoryListOutput;
+import com.gusdev.admin.catalogo.application.category.retrieve.list.ListCategoriesUseCase;
 import com.gusdev.admin.catalogo.application.category.update.UpdateCategoryOutput;
 import com.gusdev.admin.catalogo.application.category.update.UpdateCategoryUseCase;
 import com.gusdev.admin.catalogo.domain.category.Category;
 import com.gusdev.admin.catalogo.domain.category.CategoryID;
 import com.gusdev.admin.catalogo.domain.exceptions.DomainException;
 import com.gusdev.admin.catalogo.domain.exceptions.NotFoundException;
+import com.gusdev.admin.catalogo.domain.pagination.Pagination;
+import com.gusdev.admin.catalogo.domain.pagination.SearchQuery;
 import com.gusdev.admin.catalogo.domain.validation.Error;
 import com.gusdev.admin.catalogo.domain.validation.handler.Notification;
 import com.gusdev.admin.catalogo.infrastructure.category.models.CreateCategoryApiInput;
 import com.gusdev.admin.catalogo.infrastructure.category.models.UpdateCategoryApiInput;
 import io.vavr.API;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +36,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Objects;
 
 @ControllerTest(controllers = CategoryAPI.class)
@@ -56,6 +62,9 @@ public class CategoryAPITest {
 
     @MockBean
     private DeleteCategoryUseCase deleteCategoryUseCase;
+
+    @MockBean
+    private ListCategoriesUseCase listCategoriesUseCase;
 
     //cenário de teste feliz, quando tudo está ok
     @Test
@@ -370,4 +379,57 @@ public class CategoryAPITest {
         Mockito.verify(deleteCategoryUseCase, Mockito.times(1)).execute(Mockito.eq(expectedId));
     }
 
+
+    @Test
+    public void givenAValidParams_whenCallsListCategories_shouldReturnCategories() throws Exception{
+        // given
+        final var aCategory = Category.newCategory("movies", null, true);
+        final var expectedPage = 0;
+        final var expectedPerPage = 10;
+        final var expectedTerms = "movies";
+        final var expectedSort = "description";
+        final var expectedDirection = "desc";
+        final var expectedItemsCount = 1;
+        final var expectedTotal = 1;
+        final var expectedItems = List.of(CategoryListOutput.from(aCategory));
+
+
+        Mockito.when(listCategoriesUseCase.execute(Mockito.any()))
+                .thenReturn(new Pagination<>(expectedPage, expectedPerPage, expectedTotal, expectedItems));
+
+        // when
+        final var request = MockMvcRequestBuilders.get("/categories")
+                .queryParam("page", String.valueOf(expectedPage))
+                .queryParam("pagPage", String.valueOf(expectedPerPage))
+                .queryParam("sort", expectedSort)
+                .queryParam("dir", expectedDirection)
+                .queryParam("search", expectedTerms)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        final var response = this.mvc.perform(request)
+                .andDo(MockMvcResultHandlers.print());
+
+        // then
+        response.andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.current_page", Matchers.equalTo(expectedPage)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.per_page", Matchers.equalTo(expectedPage)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.total", Matchers.equalTo(expectedTotal)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.items", Matchers.hasSize(expectedItemsCount)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.items[0].id", Matchers.equalTo(aCategory.getId().getValue())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.items[0].name", Matchers.equalTo(aCategory.getName())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.items[0].description", Matchers.equalTo(aCategory.getDescription())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.items[0].is_active", Matchers.equalTo(aCategory.isActive())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.items[0].created_at", Matchers.equalTo(aCategory.getCreatedAt().toString())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.items[0].updated_at", Matchers.equalTo(aCategory.getUpdatedAt().toString())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.items[0].deleted_at", Matchers.equalTo(aCategory.getDeletedAt())));
+
+        Mockito.verify(listCategoriesUseCase, Mockito.times(1)).execute(Mockito.argThat(query ->
+               Objects.equals(expectedPage, query.page()) &&
+               Objects.equals(expectedPerPage, query.perPage()) &&
+               Objects.equals(expectedDirection, query.direction()) &&
+               Objects.equals(expectedSort, query.sort()) &&
+               Objects.equals(expectedTerms, query.terms())
+        ));
+    }
 }
