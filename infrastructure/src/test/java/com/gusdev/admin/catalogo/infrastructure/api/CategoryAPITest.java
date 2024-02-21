@@ -393,7 +393,6 @@ public class CategoryAPITest {
         final var expectedTotal = 1;
         final var expectedItems = List.of(CategoryListOutput.from(aCategory));
 
-
         Mockito.when(listCategoriesUseCase.execute(Mockito.any()))
                 .thenReturn(new Pagination<>(expectedPage, expectedPerPage, expectedTotal, expectedItems));
 

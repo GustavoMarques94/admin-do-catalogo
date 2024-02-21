@@ -38,7 +38,7 @@ public interface CategoryAPI {
     @GetMapping
     @Operation(summary = "List all categories paginated")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Listed successfully"),
+            @ApiResponse(responseCode = "200", description = "Listed successfully"),
             @ApiResponse(responseCode = "422", description = "A invalid parameter was received"),
             @ApiResponse(responseCode = "500", description = "An internal server error was thrown"),
     })
