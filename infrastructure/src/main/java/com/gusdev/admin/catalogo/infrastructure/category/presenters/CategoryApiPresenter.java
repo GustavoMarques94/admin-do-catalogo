@@ -1,15 +1,15 @@
 package com.gusdev.admin.catalogo.infrastructure.category.presenters;
 
 import com.gusdev.admin.catalogo.application.category.retrieve.get.CategoryOutput;
-import com.gusdev.admin.catalogo.infrastructure.category.models.CategoryApiOutput;
+import com.gusdev.admin.catalogo.infrastructure.category.models.CategoryResponse;
 
 import java.util.function.Function;
 
 public interface CategoryApiPresenter {
 
     //Ambos os métodos fazem a mesma coisa, são apenas formas diferentes de fazer um cast
-    Function<CategoryOutput, CategoryApiOutput> present =
-            output -> new CategoryApiOutput(
+    Function<CategoryOutput, CategoryResponse> present =
+            output -> new CategoryResponse(
                     output.id().getValue(),
                     output.name(),
                     output.description(),
@@ -19,8 +19,8 @@ public interface CategoryApiPresenter {
                     output.deletedAt()
             );
 
-    static CategoryApiOutput present(final CategoryOutput output){
-        return new CategoryApiOutput(
+    static CategoryResponse present(final CategoryOutput output){
+        return new CategoryResponse(
                 output.id().getValue(),
                 output.name(),
                 output.description(),

@@ -13,9 +13,9 @@ import com.gusdev.admin.catalogo.domain.pagination.Pagination;
 import com.gusdev.admin.catalogo.domain.pagination.SearchQuery;
 import com.gusdev.admin.catalogo.domain.validation.handler.Notification;
 import com.gusdev.admin.catalogo.infrastructure.api.CategoryAPI;
-import com.gusdev.admin.catalogo.infrastructure.category.models.CategoryApiOutput;
-import com.gusdev.admin.catalogo.infrastructure.category.models.CreateCategoryApiInput;
-import com.gusdev.admin.catalogo.infrastructure.category.models.UpdateCategoryApiInput;
+import com.gusdev.admin.catalogo.infrastructure.category.models.CategoryResponse;
+import com.gusdev.admin.catalogo.infrastructure.category.models.CreateCategoryRequest;
+import com.gusdev.admin.catalogo.infrastructure.category.models.UpdateCategoryRequest;
 import com.gusdev.admin.catalogo.infrastructure.category.presenters.CategoryApiPresenter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -47,7 +47,7 @@ public class CategoryController implements CategoryAPI {
     }
 
     @Override
-    public ResponseEntity<?> createCategory(CreateCategoryApiInput input) {
+    public ResponseEntity<?> createCategory(CreateCategoryRequest input) {
         final var aCommand = CreateCategoryCommand.with(
                 input.name(),
                 input.description(),
@@ -66,12 +66,12 @@ public class CategoryController implements CategoryAPI {
 
     @Override
     public Pagination<?> listCategories(String search, int page, int perPage, String sort, String dir) {
-        return listCategoriesUseCase
+        return this.listCategoriesUseCase
                 .execute(new SearchQuery(page, perPage, search, sort, dir));
     }
 
     @Override
-    public CategoryApiOutput getById(String id) {
+    public CategoryResponse getById(String id) {
         //Ambas as formas funcionam, olhar a explicação na interface 'CategoryApiPresenter'
         return CategoryApiPresenter.present(this.getCategoryByIdUseCase.execute(id));
         //return CategoryApiPresenter.present.apply(this.getCategoryByIdUseCase.execute(id));
@@ -81,7 +81,7 @@ public class CategoryController implements CategoryAPI {
     }
 
     @Override
-    public ResponseEntity<?> updateById(final String id, final UpdateCategoryApiInput input) {
+    public ResponseEntity<?> updateById(final String id, final UpdateCategoryRequest input) {
         final var aCommand = UpdateCategoryCommand.with(
                 id,
                 input.name(),

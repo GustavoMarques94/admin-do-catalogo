@@ -3,9 +3,9 @@ package com.gusdev.admin.catalogo.infrastructure.api;
 //Vamos difinir quais o métodos a API irá expor, e também a parte de documentação com springDocs
 
 import com.gusdev.admin.catalogo.domain.pagination.Pagination;
-import com.gusdev.admin.catalogo.infrastructure.category.models.CategoryApiOutput;
-import com.gusdev.admin.catalogo.infrastructure.category.models.CreateCategoryApiInput;
-import com.gusdev.admin.catalogo.infrastructure.category.models.UpdateCategoryApiInput;
+import com.gusdev.admin.catalogo.infrastructure.category.models.CategoryResponse;
+import com.gusdev.admin.catalogo.infrastructure.category.models.CreateCategoryRequest;
+import com.gusdev.admin.catalogo.infrastructure.category.models.UpdateCategoryRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -32,7 +32,7 @@ public interface CategoryAPI {
            @ApiResponse(responseCode = "422", description = "A validation error was thrown"),
            @ApiResponse(responseCode = "500", description = "An internal server error was thrown"),
     })
-    ResponseEntity<?> createCategory(@RequestBody CreateCategoryApiInput input); //Informo na assinatura do método que ele irá receber um Json chamado Input; E como o Spring faz o bing do Json que veio do Body da requisição para um Objeto? '@RequestBody'
+    ResponseEntity<?> createCategory(@RequestBody CreateCategoryRequest input); //Informo na assinatura do método que ele irá receber um Json chamado Input; E como o Spring faz o bing do Json que veio do Body da requisição para um Objeto? '@RequestBody'
 
 
     @GetMapping
@@ -61,7 +61,7 @@ public interface CategoryAPI {
             @ApiResponse(responseCode = "404", description = "Category was not found"),
             @ApiResponse(responseCode = "500", description = "An internal server error was thrown"),
     })
-    CategoryApiOutput getById(@PathVariable(name = "id") String id); //Informo na assinatura do método que ele irá receber id, o @PathVariable irá fazer o bind do id para String
+    CategoryResponse getById(@PathVariable(name = "id") String id); //Informo na assinatura do método que ele irá receber id, o @PathVariable irá fazer o bind do id para String
 
     @PutMapping(
             value = "{id}",
@@ -74,7 +74,7 @@ public interface CategoryAPI {
             @ApiResponse(responseCode = "404", description = "Category wat not found"),
             @ApiResponse(responseCode = "500", description = "An internal server error was thrown")
     })
-    ResponseEntity<?> updateById(@PathVariable(name = "id") String id, @RequestBody UpdateCategoryApiInput input);
+    ResponseEntity<?> updateById(@PathVariable(name = "id") String id, @RequestBody UpdateCategoryRequest input);
 
     @DeleteMapping(
             value = "{id}",

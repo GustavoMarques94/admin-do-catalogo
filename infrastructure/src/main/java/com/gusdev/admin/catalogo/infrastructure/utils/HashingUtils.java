@@ -1,4 +1,4 @@
-package com.gusdev.admin.catalogo.infrastructure.category.utils;
+package com.gusdev.admin.catalogo.infrastructure.utils;
 
 //import com.google.common.hash.HashFunction;
 //import com.google.common.hash.Hashing;

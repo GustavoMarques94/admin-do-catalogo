@@ -7,7 +7,7 @@ import com.gusdev.admin.catalogo.domain.pagination.Pagination;
 import com.gusdev.admin.catalogo.domain.pagination.SearchQuery;
 import com.gusdev.admin.catalogo.infrastructure.category.persistence.CategoryJpaEntity;
 import com.gusdev.admin.catalogo.infrastructure.category.persistence.CategoryRepository;
-import com.gusdev.admin.catalogo.infrastructure.category.utils.SpecificationUtils;
+import com.gusdev.admin.catalogo.infrastructure.utils.SpecificationUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;

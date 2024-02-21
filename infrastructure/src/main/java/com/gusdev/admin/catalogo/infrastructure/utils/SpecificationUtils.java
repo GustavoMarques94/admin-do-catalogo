@@ -1,4 +1,4 @@
-package com.gusdev.admin.catalogo.infrastructure.category.utils;
+package com.gusdev.admin.catalogo.infrastructure.utils;
 
 import org.springframework.data.jpa.domain.Specification;
 

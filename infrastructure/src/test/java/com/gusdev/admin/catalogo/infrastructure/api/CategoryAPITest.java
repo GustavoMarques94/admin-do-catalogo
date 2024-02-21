@@ -16,14 +16,12 @@ import com.gusdev.admin.catalogo.domain.category.CategoryID;
 import com.gusdev.admin.catalogo.domain.exceptions.DomainException;
 import com.gusdev.admin.catalogo.domain.exceptions.NotFoundException;
 import com.gusdev.admin.catalogo.domain.pagination.Pagination;
-import com.gusdev.admin.catalogo.domain.pagination.SearchQuery;
 import com.gusdev.admin.catalogo.domain.validation.Error;
 import com.gusdev.admin.catalogo.domain.validation.handler.Notification;
-import com.gusdev.admin.catalogo.infrastructure.category.models.CreateCategoryApiInput;
-import com.gusdev.admin.catalogo.infrastructure.category.models.UpdateCategoryApiInput;
+import com.gusdev.admin.catalogo.infrastructure.category.models.CreateCategoryRequest;
+import com.gusdev.admin.catalogo.infrastructure.category.models.UpdateCategoryRequest;
 import io.vavr.API;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +32,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.time.ZonedDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Objects;
 
@@ -75,7 +71,7 @@ public class CategoryAPITest {
         final var expectedIsActive = true;
 
         final var anInput =
-                new CreateCategoryApiInput(expectedName, expectedDescription, expectedIsActive);
+                new CreateCategoryRequest(expectedName, expectedDescription, expectedIsActive);
 
         Mockito.when(createCategoryUseCase.execute(Mockito.any()))
                 .thenReturn(API.Right(CreateCategoryOutput.from("123"))); //Temos que retornar um Either de API.Right, e ele espera um retorno que é o retorno do nosso caso de uso 'CategoryOutput'
@@ -114,7 +110,7 @@ public class CategoryAPITest {
         final var expectedMessage = "'name' should not be null";
 
         final var anInput =
-                new CreateCategoryApiInput(expectedName, expectedDescription, expectedIsActive);
+                new CreateCategoryRequest(expectedName, expectedDescription, expectedIsActive);
 
         Mockito.when(createCategoryUseCase.execute(Mockito.any()))
                 .thenReturn(API.Left(Notification.create(new Error(expectedMessage)))); //Temos que retornar um Either de API.Left, caso de erro, como setamos o name como null, então é esse o erro que esperamos
@@ -154,7 +150,7 @@ public class CategoryAPITest {
         final var expectedMessage = "'name' should not be null";
 
         final var anInput =
-                new CreateCategoryApiInput(expectedName, expectedDescription, expectedIsActive);
+                new CreateCategoryRequest(expectedName, expectedDescription, expectedIsActive);
 
         Mockito.when(createCategoryUseCase.execute(Mockito.any()))
                 .thenThrow(DomainException.with(new Error(expectedMessage))); //Lanço uma Exception quando bater no create
@@ -257,7 +253,7 @@ public class CategoryAPITest {
                 .thenReturn(API.Right(UpdateCategoryOutput.from(expectedId)));
 
         final var aCommand =
-                new UpdateCategoryApiInput(expectedName, expectedDescription, expectedIsActive);
+                new UpdateCategoryRequest(expectedName, expectedDescription, expectedIsActive);
 
         // when
         final var request = MockMvcRequestBuilders.put("/categories/{id}", expectedId)
@@ -294,7 +290,7 @@ public class CategoryAPITest {
                 .thenThrow(NotFoundException.with(Category.class, CategoryID.from(expectedId)));
 
         final var aCommand =
-                new UpdateCategoryApiInput(expectedName, expectedDescription, expectedIsActive);
+                new UpdateCategoryRequest(expectedName, expectedDescription, expectedIsActive);
 
         // when
         final var request = MockMvcRequestBuilders.put("/categories/{id}", expectedId)
@@ -332,7 +328,7 @@ public class CategoryAPITest {
                 .thenReturn(API.Left(Notification.create(new Error(expectedMessage))));
 
         final var aCommand =
-                new UpdateCategoryApiInput(expectedName, expectedDescription, expectedIsActive);
+                new UpdateCategoryRequest(expectedName, expectedDescription, expectedIsActive);
 
         // when
         final var request = MockMvcRequestBuilders.put("/categories/{id}", expectedId)
